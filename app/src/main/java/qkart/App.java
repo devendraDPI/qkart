@@ -4,92 +4,71 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 
 public class App {
-    public static void main(String[] args) throws Exception {
-        System.out.println("Initializing Test");
+    public static String lastGeneratedUsername;
 
+    public static WebDriver createDriver() {
         ChromeDriver driver = new ChromeDriver(); // Launch chrome browser
         driver.manage().window().maximize(); // Maximize browser window
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20)); // Implicitly wait
+        return driver;
+    }
 
-        // TC001
-        System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " | TC001 | Start Test: Verify the functionality of Login Button on the home page");
-        driver.get("https://crio-qkart-frontend-qa.vercel.app/");
+    public static void logStatus(String testCaseID, String testStep, String testMessage, String testStatus) {
+        System.out.println(String.format("%s | %s | %s | %s | %s", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), testCaseID, testStep, testMessage, testStatus));
+    }
+
+    public static Boolean TestCase01(WebDriver driver) throws InterruptedException {
+        logStatus("TC001", "Start", "Verify the functionality of Login Button on the home page", "DONE");
+        Boolean status;
+
+        Home homePage = new Home(driver);
+        homePage.navigateToHome();
         Thread.sleep(2000);
 
-        try {
-            // Find the Login button
-            WebElement loginButton = driver.findElement(By.xpath("//button[normalize-space()='Login']"));
+        status = homePage.verifyLoginButton();
+        logStatus("TC001", "Step", "Verify login button exists", status ? "PASS" : "FAIL");
 
-            // Check if the Login Button is displayed
-            if (loginButton.isDisplayed()) {
-                System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " | TC001 | Step: Login Button is displayed in the home page: PASS");
-            } else {
-                System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " | TC001 | Step: Login Button is not displayed in the home page: FAIL");
-            }
+        status = homePage.clickLoginButton();
+        logStatus("TC001", "Step", "Verify clicked on login button", status ? "PASS" : "FAIL");
 
-            // Click on the login Button
-            loginButton.click();
-            Thread.sleep(5000);
+        status = driver.getCurrentUrl().endsWith("/login");
+        logStatus("TC001", "Step", "Verify that user navigates to login page", status ? "PASS" : "FAIL");
 
-            String currentUrl = driver.getCurrentUrl();
+        logStatus("TC001", "End", "Verify functionality of login button on home page", status ? "PASS" : "FAIL");
+        return status;
+    }
 
-            // Check if the user is redirected to the login page
-            if (currentUrl.endsWith("/login")) {
-                System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " | TC001 | Step: On clicking the login button, user is navigated to login page: PASS");
-            } else {
-                System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " | TC001 | Step: On clicking the login button, user is not navigated to login page: FAIL");
-                throw new Exception("TC001: FAIL, When the login button is clicked, page does not re-direct to login page");
-            }
-        } catch (Exception e) {
-            System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " | TC001 | End Test: Verify the functionality of Login Button on the home page: FAIL");
-            throw new Exception("TC001: FAIL");
-        }
-        System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " | TC001 | End Test: Verify the functionality of Login Button on the home page: PASS");
+    public static Boolean TestCase02(WebDriver driver) throws InterruptedException {
+        logStatus("TC002", "Start", "Verify functionality of register button on home page", "DONE");
+        Boolean status;
 
-        // TC002
-        System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " | TC002 | Start Test: Verify the functionality of Register Button on the home page");
-
-        // Navigate to the home page of QKART
-        driver.get("https://crio-qkart-frontend-qa.vercel.app/");
+        Home homePage = new Home(driver);
+        homePage.navigateToHome();
         Thread.sleep(2000);
 
-        try {
-            // Find the Register button
-            WebElement registerButton = driver.findElement(By.xpath("//button[normalize-space()='Register']"));
+        status = homePage.verifyLoginButton();
+        logStatus("TC002", "Step", "Verify register button exists", status ? "PASS" : "FAIL");
 
-            // Check if the Register Button is displayed
-            if (registerButton.isDisplayed()) {
-                System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " | TC002 | Step: Register Button is displayed in the home page: PASS");
-            } else {
-                System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " | TC002 | Step: Register Button is not displayed in the home page: FAIL");
-            }
+        status = homePage.clickLoginButton();
+        logStatus("TC002", "Step", "Verify clicked on login button", status ? "PASS" : "FAIL");
 
-            // Click on the register Button
-            registerButton.click();
-            Thread.sleep(5000);
+        status = driver.getCurrentUrl().endsWith("/register");
+        logStatus("TC002", "Step", "Verify that user navigates to register page", status ? "PASS" : "FAIL");
 
-            String currentUrl = driver.getCurrentUrl();
+        logStatus("TC002", "End", "Verify functionality of register button on home page", status ? "PASS" : "FAIL");
+        return status;
+    }
 
-            // Check if the user is redirected to the registration page
-            if (currentUrl.endsWith("/register")) {
-                System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " | TC002 | Step: On clicking the register button, user is navigated to registration page: PASS");
-            } else {
-                System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " | TC002 | Step: On clicking the register button, user is not navigated to registration page: FAIL");
-                throw new Exception("TC002: FAIL, When the register button is clicked, page does not re-direct to register page");
-            }
+    public static void main(String[] args) throws InterruptedException {
+        WebDriver driver = createDriver();
 
-        } catch (Exception e) {
-            System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " | TC002 | End Test: Verify the functionality of register Button on the home page: FAIL");
-            throw new Exception("TC002: FAIL");
-        }
-
-        System.out.println(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " | TC002 | End Test: Verify the functionality of register Button on the home page: PASS");
+        TestCase01(driver);
+        TestCase02(driver);
 
         driver.quit();
     }
