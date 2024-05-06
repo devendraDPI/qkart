@@ -51,10 +51,10 @@ public class App {
         homePage.navigateToHome();
         Thread.sleep(2000);
 
-        status = homePage.verifyLoginButton();
+        status = homePage.verifyRegisterButton();
         logStatus("TC002", "Step", "Verify register button exists", status ? "PASS" : "FAIL");
 
-        status = homePage.clickLoginButton();
+        status = homePage.clickRegisterButton();
         logStatus("TC002", "Step", "Verify clicked on login button", status ? "PASS" : "FAIL");
 
         status = driver.getCurrentUrl().endsWith("/register");

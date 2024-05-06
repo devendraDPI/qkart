@@ -1,6 +1,8 @@
 package qkart;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class Home {
     WebDriver driver;
@@ -23,7 +25,8 @@ public class Home {
     public Boolean verifyLoginButton() {
         boolean status = false;
         // TODO: Implement logic to verify existence of Login button
-
+        WebElement loginButton = driver.findElement(By.xpath("//button[text()='Login']"));
+        status = loginButton.isDisplayed();
         return status;
     }
 
@@ -34,7 +37,13 @@ public class Home {
     public Boolean clickLoginButton() {
         boolean status = false;
         // TODO: Implement logic to click on Login button
-
+        try {
+            WebElement loginButton = driver.findElement(By.xpath("//button[text()='Login']"));
+            loginButton.click();
+            status = true;
+        } catch (Exception e) {
+            status = false;
+        }
         return status;
     }
 
@@ -44,7 +53,9 @@ public class Home {
      */
     public Boolean verifyRegisterButton() {
         boolean status = false;
-        // TODO: Implement logic to verify existence of register Bb
+        // TODO: Implement logic to verify existence of register button
+        WebElement registerButton = driver.findElement(By.xpath("//button[text()='Register']"));
+        status = registerButton.isDisplayed();
         return status;
     }
 
@@ -55,7 +66,13 @@ public class Home {
     public Boolean clickRegisterButton() {
         boolean status = false;
         // TODO: Implement logic to click on register button
-
+        try {
+            WebElement registerButton = driver.findElement(By.xpath("//button[text()='Register']"));
+            registerButton.click();
+            status = true;
+        } catch (Exception e) {
+            status = false;
+        }
         return status;
     }
 }
