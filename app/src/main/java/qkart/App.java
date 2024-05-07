@@ -45,7 +45,7 @@ public class App {
         // Save the last generated username
         lastGeneratedUsername = registration.lastGeneratedUsername;
 
-        // Visit the login page and login with the previuosly registered user
+        // Visit the login page and login with the previously registered user
         Login login = new Login(driver);
         login.navigateToLoginPage();
         status = login.loginUser(lastGeneratedUsername, "abc@123");
@@ -96,6 +96,7 @@ public class App {
         int totalTests = 0;
         int passedTests = 0;
         Boolean status;
+        WebDriver driver = createDriver();
 
         driver.manage().window().maximize(); // Maximize browser window
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20)); // Implicitly wait
