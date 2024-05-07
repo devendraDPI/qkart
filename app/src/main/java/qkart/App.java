@@ -12,7 +12,7 @@ public class App {
     public static String lastGeneratedUsername;
 
     public static WebDriver createDriver() {
-        ChromeDriver driver = new ChromeDriver(); // Launch chrome browser
+        WebDriver driver = new ChromeDriver(); // Launch chrome browser
         driver.manage().window().maximize(); // Maximize browser window
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20)); // Implicitly wait
         return driver;
@@ -22,54 +22,106 @@ public class App {
         System.out.println(String.format("%s | %s | %s | %s | %s", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), testCaseID, testStep, testMessage, testStatus));
     }
 
+    /**
+     * Verify the functionality of login button on the home page
+     */
     public static Boolean TestCase01(WebDriver driver) throws InterruptedException {
-        logStatus("TC001", "Start", "Verify the functionality of Login Button on the home page", "DONE");
+        logStatus("TC001", "Start", "Verify user registration", "DONE");
         Boolean status;
 
-        Home homePage = new Home(driver);
-        homePage.navigateToHome();
-        Thread.sleep(2000);
+        // Visit the registration page and register a new user
+        Register registration = new Register(driver);
+        registration.navigateToRegisterPage();
+        status = registration.registerUser("testUser", "abc@123", true);
+        if (!status) {
+            logStatus("TC001", "Step", "Test case FAIL. User registration FAIL", "FAIL");
+            logStatus("TC001", "End", "Verify user registration", "FAIL");
+            // Return false as the test case fails
+            return false;
+        } else {
+            logStatus("TC001", "End", "Test case PASS. User registration PASS", "PASS");
+        }
 
-        status = homePage.verifyLoginButton();
-        logStatus("TC001", "Step", "Verify login button exists", status ? "PASS" : "FAIL");
+        // Save the last generated username
+        lastGeneratedUsername = registration.lastGeneratedUsername;
 
-        status = homePage.clickLoginButton();
-        logStatus("TC001", "Step", "Verify clicked on login button", status ? "PASS" : "FAIL");
+        // Visit the login page and login with the previuosly registered user
+        Login login = new Login(driver);
+        login.navigateToLoginPage();
+        status = login.loginUser(lastGeneratedUsername, "abc@123");
+        logStatus("TC001", "Step", "User Perform Login", status ? "PASS" : "FAIL");
+        if (!status) {
+            logStatus("TC001", "End", "Verify user Registration", status ? "PASS" : "FAIL");
+            return false;
+        }
 
-        status = driver.getCurrentUrl().endsWith("/login");
-        logStatus("TC001", "Step", "Verify that user navigates to login page", status ? "PASS" : "FAIL");
+        // Visit the home page and log out the logged in user
+        Home home = new Home(driver);
+        status = home.logoutUser();
+        logStatus("TC001", "End", "Verify user Registration", status ? "PASS" : "FAIL");
 
-        logStatus("TC001", "End", "Verify functionality of login button on home page", status ? "PASS" : "FAIL");
         return status;
     }
 
+    /**
+     * Verify that an existing user is not allowed to re-register on QKart
+     */
     public static Boolean TestCase02(WebDriver driver) throws InterruptedException {
-        logStatus("TC002", "Start", "Verify functionality of register button on home page", "DONE");
+        logStatus("TC002", "Start", "Verify user registration with an existing username", "DONE");
         Boolean status;
 
-        Home homePage = new Home(driver);
-        homePage.navigateToHome();
-        Thread.sleep(2000);
+        // Visit the registration page and register a new user
+        Register registration = new Register(driver);
+        registration.navigateToRegisterPage();
+        status = registration.registerUser("testUser", "abc@123", true);
+        logStatus("TC002", "Step", "User registration", status ? "PASS" : "FAIL");
+        if (!status) {
+            logStatus("TC002", "End", "Verify user registration", status ? "PASS" : "FAIL");
+            return false;
+        }
 
-        status = homePage.verifyRegisterButton();
-        logStatus("TC002", "Step", "Verify register button exists", status ? "PASS" : "FAIL");
+        // Save the last generated username
+        lastGeneratedUsername = registration.lastGeneratedUsername;
 
-        status = homePage.clickRegisterButton();
-        logStatus("TC002", "Step", "Verify clicked on login button", status ? "PASS" : "FAIL");
+        // Visit the registration page and try to register using the previously registered user's credentials
+        registration.navigateToRegisterPage();
+        status = registration.registerUser(lastGeneratedUsername, "abc@123", false);
 
-        status = driver.getCurrentUrl().endsWith("/register");
-        logStatus("TC002", "Step", "Verify that user navigates to register page", status ? "PASS" : "FAIL");
-
-        logStatus("TC002", "End", "Verify functionality of register button on home page", status ? "PASS" : "FAIL");
-        return status;
+        // If status is true, then registration succeeded, else registration has failed. In this case registration failure means Success
+        logStatus("TC002", "End", "Verify user registration", status ? "FAIL" : "PASS");
+        return !status;
     }
 
     public static void main(String[] args) throws InterruptedException {
-        WebDriver driver = createDriver();
+        int totalTests = 0;
+        int passedTests = 0;
+        Boolean status;
 
-        TestCase01(driver);
-        TestCase02(driver);
+        driver.manage().window().maximize(); // Maximize browser window
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20)); // Implicitly wait
 
-        driver.quit();
+        try {
+            // Execute TC001
+            totalTests += 1;
+            status = TestCase01(driver);
+            if (status) {
+                passedTests += 1;
+            }
+            System.out.println("");
+
+            // Execute TC002
+            totalTests += 1;
+            status = TestCase02(driver);
+            if (status) {
+                passedTests += 1;
+            }
+            System.out.println("");
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            // Quit chrome driver
+            driver.quit();
+            System.out.println(String.format("%s out of %s test cases passed", Integer.toString(passedTests), Integer.toString(totalTests)));
+        }
     }
 }

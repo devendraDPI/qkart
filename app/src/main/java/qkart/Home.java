@@ -18,61 +18,18 @@ public class Home {
         }
     }
 
-    /**
-     * verifyLoginButton
-     * @return true if login button exists
-     */
-    public Boolean verifyLoginButton() {
-        boolean status = false;
-        // TODO: Implement logic to verify existence of Login button
-        WebElement loginButton = driver.findElement(By.xpath("//button[text()='Login']"));
-        status = loginButton.isDisplayed();
-        return status;
-    }
-
-    /**
-     * clickLoginButton
-     * @return true if login button was clicked
-     */
-    public Boolean clickLoginButton() {
-        boolean status = false;
-        // TODO: Implement logic to click on Login button
+    public Boolean logoutUser() throws InterruptedException {
         try {
-            WebElement loginButton = driver.findElement(By.xpath("//button[text()='Login']"));
-            loginButton.click();
-            status = true;
-        } catch (Exception e) {
-            status = false;
-        }
-        return status;
-    }
+            // Find and click on the logout button
+            WebElement logoutButton = driver.findElement(By.className("MuiButton-text"));
+            logoutButton.click();
 
-    /**
-     * verifyRegisterButton
-     * @return true if register button exists
-     */
-    public Boolean verifyRegisterButton() {
-        boolean status = false;
-        // TODO: Implement logic to verify existence of register button
-        WebElement registerButton = driver.findElement(By.xpath("//button[text()='Register']"));
-        status = registerButton.isDisplayed();
-        return status;
-    }
-
-    /**
-     * clickRegisterButton
-     * @return true if register button was clicked
-     */
-    public Boolean clickRegisterButton() {
-        boolean status = false;
-        // TODO: Implement logic to click on register button
-        try {
-            WebElement registerButton = driver.findElement(By.xpath("//button[text()='Register']"));
-            registerButton.click();
-            status = true;
+            // Wait for logout to complete
+            Thread.sleep(3000);
+            return true;
         } catch (Exception e) {
-            status = false;
+            // Error while logout
+            return false;
         }
-        return status;
     }
 }
