@@ -39,7 +39,7 @@ public class App {
             // Return false as the test case fails
             return false;
         } else {
-            logStatus("TC001", "End", "Test case PASS. User registration PASS", "PASS");
+            logStatus("TC001", "Step", "Test case PASS. User registration PASS", "PASS");
         }
 
         // Save the last generated username
