@@ -34,7 +34,7 @@ public class Register {
             // Concatenate the timestamp to string to form unique timestamp
             testDataUsername = username + "_" + String.valueOf(timestamp.getTime());
         } else {
-            testDataUsername = username + "_" + String.valueOf(timestamp.getTime());
+            testDataUsername = username;
         }
 
         // Type the generated username in the username field
