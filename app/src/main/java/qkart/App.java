@@ -414,12 +414,12 @@ public class App {
             System.out.println("");
 
             // Execute TC003
-            // totalTests += 1;
-            // status = TestCase03(driver);
-            // if (status) {
-            // passedTests += 1;
-            // }
-            // System.out.println("");
+            totalTests += 1;
+            status = TestCase03(driver);
+            if (status) {
+            passedTests += 1;
+            }
+            System.out.println("");
 
             // Execute TC004
             // totalTests += 1;

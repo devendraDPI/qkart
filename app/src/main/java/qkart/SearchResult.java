@@ -2,6 +2,7 @@ package qkart;
 
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -22,6 +23,8 @@ public class SearchResult {
         // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 03: MILESTONE 1
         // Find the element containing the title (product name) of the search result and assign the extract title text
         // to titleOfSearchResult
+        WebElement title = parentWebElement.findElement(By.xpath("./p"));
+        titleOfSearchResult = title.getText();
         return titleOfSearchResult;
     }
 

@@ -43,6 +43,10 @@ public class Home {
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 03: MILESTONE 1
             // Clear the contents of the search box and enter the product name in the search box
+            WebElement searchBox = driver.findElement(By.xpath("(//input[contains(@name, 'search')])[1]"));
+            searchBox.clear();
+            searchBox.sendKeys(product);
+            Thread.sleep(2000);
             return true;
         } catch (Exception e) {
             System.out.println("Error while searching for a product: " + e.getMessage());
@@ -54,16 +58,15 @@ public class Home {
      * Returns Array of Web Elements that are search results and return the same
      */
     public List<WebElement> getSearchResults() {
-        List<WebElement> searchResults = new ArrayList<WebElement>() {
-        };
+        List<WebElement> searchResults = new ArrayList<WebElement>() {};
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 03: MILESTONE 1
             // Find all WebElements corresponding to the card content section of each of search results
-            return searchResults;
+            searchResults = driver.findElements(By.xpath("//div[contains(@class, 'card-actions')]/preceding-sibling::div"));
         } catch (Exception e) {
             System.out.println("There were no search results: " + e.getMessage());
-            return searchResults;
         }
+        return searchResults;
     }
 
     /**
@@ -75,10 +78,10 @@ public class Home {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 03: MILESTONE 1
             // Check the presence of "No products found" text in the web page.
             // Assign status = true if the element is "displayed" else set status = false
-            return status;
-        } catch (Exception e) {
-            return status;
-        }
+            WebElement resultText = driver.findElement(By.xpath("//h4[contains(text(), 'No products found')]"));
+            status = resultText.isDisplayed();
+        } catch (Exception e) {}
+        return status;
     }
 
     /**
