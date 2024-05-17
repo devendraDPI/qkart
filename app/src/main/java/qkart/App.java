@@ -199,7 +199,7 @@ public class App {
 
                 // Verify if size dropdown exists
                 status = result.verifyExistenceOfSizeDropdown(driver);
-                logStatus("TC004", "Step", "validated presence of drop down", status ? "PASS" : "FAIL");
+                logStatus("TC004", "Step", "Validated presence of drop down", status ? "PASS" : "FAIL");
 
                 // Open the size chart
                 if (result.openSizeChart()) {
@@ -207,7 +207,7 @@ public class App {
                     if (result.validateSizeChartContents(expectedTableHeaders, expectedTableBody, driver)) {
                         logStatus("TC004", "Step", "Successfully validated contents of Size Chart Link", status ? "PASS" : "PASS");
                     } else {
-                        logStatus("TC004", "Step", "Failure while validating contents of Size Chart Link", status ? "PASS" : "FAIL");
+                        logStatus("TC004", "Step", "Failure while validating contents of Size Chart Link", "FAIL");
                     }
                     // Close the size chart modal
                     status = result.closeSizeChart(driver);
@@ -422,12 +422,12 @@ public class App {
             System.out.println("");
 
             // Execute TC004
-            // totalTests += 1;
-            // status = TestCase04(driver);
-            // if (status) {
-            // passedTests += 1;
-            // }
-            // System.out.println("");
+            totalTests += 1;
+            status = TestCase04(driver);
+            if (status) {
+            passedTests += 1;
+            }
+            System.out.println("");
 
             // Execute TC005
             // totalTests += 1;
