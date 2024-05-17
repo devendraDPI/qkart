@@ -136,12 +136,27 @@ public class Home {
             // Find the item on the cart with the matching productName Increment or decrement the quantity of the
             // matching product until the current quantity is reached (Note: Keep a look out when then input quantity
             // is 0, here we need to remove the item completely from the cart)
-            return false;
+            WebElement product = driver.findElement(By.xpath("//div[contains(text(), '"+ productName +"')]/parent::div"));
+            WebElement decrementQtyButton = product.findElement(By.xpath(".//button[1]"));
+            WebElement incrementQtyButton = product.findElement(By.xpath(".//button[2]"));
+            int currentQty = Integer.parseInt(product.findElement(By.xpath(".//div[contains(@data-testid, 'item-qty')]")).getText());
+            int difference = Math.abs(currentQty - quantity);
+
+            for (int i=0; i<difference; i++) {
+                if (currentQty < quantity) {
+                    incrementQtyButton.click();
+                } else {
+                    decrementQtyButton.click();
+                }
+                Thread.sleep(5000);
+            }
+
+            return true;
         } catch (Exception e) {
             if (quantity == 0) {
                 return true;
             }
-            System.out.println("exception occurred when updating cart: " + e.getMessage());
+            System.out.println("Exception occurred when updating cart: " + e.getMessage());
             return false;
         }
     }

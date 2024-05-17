@@ -304,14 +304,37 @@ public class App {
         Login login = new Login(driver);
 
         // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 06: MILESTONE 5
-
         // TODO: Register a new user
+        // Go to the Register page
+        registration.navigateToRegisterPage();
+
+        // Register a new user
+        status = registration.registerUser("testUser", "abc@123", true);
+        if (!status) {
+            logStatus("TC006", "End", "Happy Flow Test Failed", "FAIL");
+        }
+
+        // Save the username of the newly registered user
+        lastGeneratedUsername = registration.lastGeneratedUsername;
 
         // TODO: Login using the newly registed user
+        // Go to the login page
+        login.navigateToLoginPage();
+
+        // Login with the newly registered user's credentials
+        status = login.loginUser(lastGeneratedUsername, "abc@123");
+        if (!status) {
+            logStatus("TC006", "Step", "User Perform Login Failed", status ? "PASS" : "FAIL");
+            logStatus("TC006", "End", "Happy Flow Test Failed", status ? "PASS" : "FAIL");
+        }
 
         // TODO: Add "Xtend Smart Watch" to cart
+        status = homePage.searchForProduct("Xtend");
+        homePage.addProductToCart("Xtend Smart Watch");
 
         // TODO: Add "Yarine Floor Lamp" to cart
+        status = homePage.searchForProduct("Yarine");
+        homePage.addProductToCart("Yarine Floor Lamp");
 
         // update watch quantity to 2
         homePage.changeProductQuantityInCart("Xtend Smart Watch", 2);
@@ -438,12 +461,12 @@ public class App {
             System.out.println("");
 
             // Execute TC006
-            // totalTests += 1;
-            // status = TestCase06(driver);
-            // if (status) {
-            // passedTests += 1;
-            // }
-            // System.out.println("");
+            totalTests += 1;
+            status = TestCase06(driver);
+            if (status) {
+            passedTests += 1;
+            }
+            System.out.println("");
 
             // Execute TC007
             // totalTests += 1;
