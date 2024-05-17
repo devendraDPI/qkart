@@ -1,6 +1,10 @@
 package qkart;
 
+import java.util.List;
+
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class Checkout {
     WebDriver driver;
@@ -20,15 +24,27 @@ public class Checkout {
      * Return Boolean denoting the status of adding a new address
      */
     public Boolean addNewAddress(String addressString) {
+        Boolean status = false;
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             // Click on the "Add new address" button, enter the addressString in the address text box and click on the
             // "ADD" button to save the address
-            return false;
+            WebElement addAddress = driver.findElement(By.xpath("//button[contains(text(), 'Add new address')]"));
+            addAddress.click();
+
+            WebElement addressTextArea = driver.findElement(By.xpath("//textarea[contains(@placeholder, 'your complete address')]"));
+            addressTextArea.sendKeys(addressString);
+
+            WebElement addButton = driver.findElement(By.xpath("//button[contains(text(), 'Add')]"));
+            addButton.click();
+
+            Thread.sleep(3000);
+
+            status = true;
         } catch (Exception e) {
             System.out.println("Exception occurred while entering address: " + e.getMessage());
-            return false;
         }
+        return status;
     }
 
     /**
@@ -39,26 +55,37 @@ public class Checkout {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             // Iterate through all the address boxes to find the address box with matching text, addressToSelect and
             // click on it
+            List<WebElement> addresses = driver.findElements(By.xpath("//input[contains(@name, 'address')]/parent::span/following-sibling::p"));
+            for (WebElement address : addresses) {
+                if (address.getText().equals(addressToSelect)) {
+                    address.click();
+                    Thread.sleep(2000);
+                    return true;
+                }
+            }
             System.out.println("Unable to find the given address");
-            return false;
         } catch (Exception e) {
             System.out.println("Exception Occurred while selecting the given address: " + e.getMessage());
-            return false;
         }
+        return false;
     }
 
     /**
      * Return Boolean denoting the status of place order action
      */
     public Boolean placeOrder() {
+        Boolean status = false;
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             // Find the "PLACE ORDER" button and click on it
-            return false;
+            WebElement placeOrderButton = driver.findElement(By.xpath("//button[contains(text(), 'PLACE ORDER')]"));
+            placeOrderButton.click();
+            Thread.sleep(2000);
+            status = true;
         } catch (Exception e) {
             System.out.println("Exception while clicking on PLACE ORDER: " + e.getMessage());
-            return false;
         }
+        return status;
     }
 
     /**

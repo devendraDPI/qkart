@@ -92,6 +92,15 @@ public class Home {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             // Iterate through each product on the page to find the WebElement corresponding to the matching
             // productName Click on the "ADD TO CART" button for that element Return true if these operations succeeds
+            List<WebElement> products = driver.findElements(By.xpath("//div[contains(@class, 'card-actions')]/preceding-sibling::div/p[1]"));
+            List<WebElement> addToCartButton = driver.findElements(By.xpath("//button[contains(text(), 'Add to cart')]"));
+            for (int i=0; i<products.size(); i++) {
+                if (productName.equals(products.get(i).getText())) {
+                    addToCartButton.get(i).click();
+                    Thread.sleep(2000);
+                    return true;
+                }
+            }
             System.out.println("Unable to find the given product");
             return false;
         } catch (Exception e) {
@@ -108,11 +117,14 @@ public class Home {
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             // Find and click on the the checkout button
-            return status;
+            WebElement checkoutButton = driver.findElement(By.xpath("//button[contains(text(), 'Checkout')]"));
+            checkoutButton.click();
+            Thread.sleep(2000);
+            status = true;
         } catch (Exception e) {
             System.out.println("Exception while clicking on Checkout: " + e.getMessage());
-            return status;
         }
+        return status;
     }
 
     /**
