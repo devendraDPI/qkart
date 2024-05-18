@@ -469,12 +469,12 @@ public class App {
             System.out.println("");
 
             // Execute TC007
-            // totalTests += 1;
-            // status = TestCase07(driver);
-            // if (status) {
-            // passedTests += 1;
-            // }
-            // System.out.println("");
+            totalTests += 1;
+            status = TestCase07(driver);
+            if (status) {
+            passedTests += 1;
+            }
+            System.out.println("");
         } catch (Exception e) {
             throw e;
         } finally {
