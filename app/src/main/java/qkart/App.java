@@ -1,11 +1,15 @@
 package qkart;
 
+import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -25,11 +29,10 @@ public class App {
     }
 
     public static void logStatus(String testCaseID, String testStep, String testMessage, String testStatus) {
-        System.out.println(String.format("%s | %s | %s | %s | %s", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), testCaseID, testStep, testMessage, testStatus));
+        System.out.println(String.format("%s | %s | %s | %s | %s", getDateTime("yyyy-MM-dd HH:mm:ss"), testCaseID, testStep, testMessage, testStatus));
     }
 
     public static void takeScreenshot(WebDriver driver, String screenshotType, String description) {
-        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION - Implement method using below steps
         /*
          * 1. Check if the folder "/screenshots" exists, create if it doesn't
          * 2. Generate a unique string using the timestamp
@@ -38,6 +41,28 @@ public class App {
          * naming convention: screenshot_<Timestamp>_<ScreenshotType>_<Description>.png
          * eg: screenshot_2022-03-05T06:59:46.015489_StartTestcase_Testcase01.png
          */
+        try {
+            File screenshotDir = new File(File.separator + "screenshots");
+
+            if (!screenshotDir.exists()) {
+                screenshotDir.mkdirs();
+            }
+
+            String fileName = String.format("screenshot_%s_%s_%s.png", getDateTime("yyyyMMddHHmmss"), screenshotType, description);
+
+            TakesScreenshot scrShot = ((TakesScreenshot) driver);
+            File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
+
+            File DestFile = new File("screenshots" + File.separator + fileName);
+            FileUtils.copyFile(SrcFile, DestFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String getDateTime(String formatPattern) {
+        LocalDateTime now = LocalDateTime.now();
+        return now.format(DateTimeFormatter.ofPattern(formatPattern));
     }
 
     /**
@@ -45,6 +70,8 @@ public class App {
      */
     public static Boolean TestCase01(WebDriver driver) throws InterruptedException {
         logStatus("TC001", "Start", "Verify user registration", "DONE");
+        takeScreenshot(driver, "Start", "TC001");
+
         Boolean status;
 
         // Visit the registration page and register a new user
@@ -54,6 +81,7 @@ public class App {
         if (!status) {
             logStatus("TC001", "Step", "Test case FAIL. User registration FAIL", "FAIL");
             logStatus("TC001", "End", "Verify user registration", "FAIL");
+            takeScreenshot(driver, "Fail", "TC001");
             // Return false as the test case fails
             return false;
         } else {
@@ -70,13 +98,16 @@ public class App {
         logStatus("TC001", "Step", "User Perform Login", status ? "PASS" : "FAIL");
         if (!status) {
             logStatus("TC001", "End", "Verify user Registration", status ? "PASS" : "FAIL");
+            takeScreenshot(driver, "Fail", "TC001");
             return false;
         }
 
         // Visit the home page and log out the logged in user
         Home home = new Home(driver);
         status = home.logoutUser();
+
         logStatus("TC001", "End", "Verify user Registration", status ? "PASS" : "FAIL");
+        takeScreenshot(driver, "End", "TC001");
 
         return status;
     }
@@ -86,6 +117,8 @@ public class App {
      */
     public static Boolean TestCase02(WebDriver driver) throws InterruptedException {
         logStatus("TC002", "Start", "Verify user registration with an existing username", "DONE");
+        takeScreenshot(driver, "Start", "TC002");
+
         Boolean status;
 
         // Visit the registration page and register a new user
@@ -95,6 +128,7 @@ public class App {
         logStatus("TC002", "Step", "User registration", status ? "PASS" : "FAIL");
         if (!status) {
             logStatus("TC002", "End", "Verify user registration", status ? "PASS" : "FAIL");
+            takeScreenshot(driver, "Fail", "TC002");
             return false;
         }
 
@@ -107,6 +141,8 @@ public class App {
 
         // If status is true, then registration succeeded, else registration has failed. In this case registration failure means Success
         logStatus("TC002", "End", "Verify user registration", status ? "FAIL" : "PASS");
+        takeScreenshot(driver, "End", "TC002");
+
         return !status;
     }
 
@@ -115,6 +151,8 @@ public class App {
      */
     public static Boolean TestCase03(WebDriver driver) throws InterruptedException {
         logStatus("TC003", "Start", "Verify functionality of search box", "DONE");
+        takeScreenshot(driver, "Start", "TC003");
+
         boolean status;
 
         // Visit the home page
@@ -125,6 +163,7 @@ public class App {
         status = homePage.searchForProduct("yonex");
         if (!status) {
             logStatus("TC003", "End", "Unable to search for given product", "FAIL");
+            takeScreenshot(driver, "Fail", "TC003");
             return false;
         }
 
@@ -134,6 +173,7 @@ public class App {
         // Verify the search results are available
         if (searchResults.size() == 0) {
             logStatus("TC003", "End", "There were no results for the given search string", "FAIL");
+            takeScreenshot(driver, "Fail", "TC003");
             return false;
         }
 
@@ -145,6 +185,7 @@ public class App {
             String elementText = resultWebElement.getTitleOfResult();
             if (!elementText.toUpperCase().contains("YONEX")) {
                 logStatus("TC003", "End", "Test Results contains un-expected values: " + elementText, "FAIL");
+                takeScreenshot(driver, "Fail", "TC003");
                 return false;
             }
         }
@@ -158,6 +199,7 @@ public class App {
         status = homePage.searchForProduct("Gesundheit");
         if (!status) {
             logStatus("TC003", "End", "Unable to search for given product", "FAIL");
+            takeScreenshot(driver, "Fail", "TC003");
             return false;
         }
 
@@ -170,8 +212,12 @@ public class App {
             logStatus("TC003", "End", "Verified that no search results were found for the given text", "PASS");
         } else {
             logStatus("TC003", "End", "Expected: no results, actual: Results were available", "FAIL");
+            takeScreenshot(driver, "Fail", "TC003");
             return false;
         }
+
+        takeScreenshot(driver, "End", "TC003");
+
         return true;
     }
 
@@ -180,6 +226,8 @@ public class App {
      */
     public static Boolean TestCase04(WebDriver driver) throws InterruptedException {
         logStatus("TC004", "Start", "Verify the presence of size Chart", "DONE");
+        takeScreenshot(driver, "Start", "TC004");
+
         boolean status = false;
 
         // Visit home page
@@ -221,19 +269,25 @@ public class App {
                         logStatus("TC004", "Step", "Successfully validated contents of Size Chart Link", status ? "PASS" : "PASS");
                     } else {
                         logStatus("TC004", "Step", "Failure while validating contents of Size Chart Link", "FAIL");
+                        takeScreenshot(driver, "Fail", "TC004");
                     }
                     // Close the size chart modal
                     status = result.closeSizeChart(driver);
                 } else {
                     logStatus("TC004", "End", "Failure to open Size Chart", "FAIL");
+                    takeScreenshot(driver, "Fail", "TC004");
                     return false;
                 }
             } else {
                 logStatus("TC004", "End", "Size Chart Link does not exist", "FAIL");
+                takeScreenshot(driver, "Fail", "TC004");
                 return false;
             }
         }
+
         logStatus("TC004", "End", "Validated Size Chart Details", "PASS");
+        takeScreenshot(driver, "End", "TC004");
+
         return status;
     }
 
@@ -242,6 +296,8 @@ public class App {
      */
     public static Boolean TestCase05(WebDriver driver) throws InterruptedException {
         logStatus("TC005", "Start", "Verify Happy Flow of buying products", "DONE");
+        takeScreenshot(driver, "Start", "TC005");
+
         Boolean status;
 
         // Go to the Register page
@@ -252,6 +308,7 @@ public class App {
         status = registration.registerUser("testUser", "abc@123", true);
         if (!status) {
             logStatus("TC005", "End", "Happy Flow Test Failed", "FAIL");
+            takeScreenshot(driver, "Fail", "TC005");
         }
 
         // Save the username of the newly registered user
@@ -266,6 +323,7 @@ public class App {
         if (!status) {
             logStatus("TC005", "Step", "User Perform Login Failed", status ? "PASS" : "FAIL");
             logStatus("TC005", "End", "Happy Flow Test Failed", status ? "PASS" : "FAIL");
+            takeScreenshot(driver, "Fail", "TC005");
         }
 
         // Go to the home page
@@ -304,6 +362,8 @@ public class App {
         homePage.logoutUser();
 
         logStatus("TC005", "End", "Happy Flow Test Completed", status ? "PASS" : "FAIL");
+        takeScreenshot(driver, "End", "TC005");
+
         return status;
     }
 
@@ -312,6 +372,8 @@ public class App {
      */
     public static Boolean TestCase06(WebDriver driver) throws InterruptedException {
         logStatus("TC006", "Start", "Verify that cart can be edited", "DONE");
+        takeScreenshot(driver, "Start", "TC006");
+
         Boolean status;
 
         Home homePage = new Home(driver);
@@ -326,6 +388,7 @@ public class App {
         status = registration.registerUser("testUser", "abc@123", true);
         if (!status) {
             logStatus("TC006", "End", "Happy Flow Test Failed", "FAIL");
+            takeScreenshot(driver, "Fail", "TC006");
         }
 
         // Save the username of the newly registered user
@@ -340,6 +403,8 @@ public class App {
         if (!status) {
             logStatus("TC006", "Step", "User Perform Login Failed", status ? "PASS" : "FAIL");
             logStatus("TC006", "End", "Happy Flow Test Failed", status ? "PASS" : "FAIL");
+            takeScreenshot(driver, "Fail", "TC006");
+            return false;
         }
 
         // Add "Xtend Smart Watch" to cart
@@ -378,6 +443,8 @@ public class App {
         homePage.logoutUser();
 
         logStatus("TC006", "End", "Verify that cart can be edited", status ? "PASS" : "FAIL");
+        takeScreenshot(driver, "End", "TC006");
+
         return status;
     }
 
@@ -386,6 +453,8 @@ public class App {
      */
     public static Boolean TestCase07(WebDriver driver) throws InterruptedException {
         logStatus("TC007", "Start", "Verify that insufficient balance error is thrown when the wallet balance is not enough", "DONE");
+        takeScreenshot(driver, "Start", "TC007");
+
         Boolean status;
 
         Register registration = new Register(driver);
@@ -394,6 +463,7 @@ public class App {
         if (!status) {
             logStatus("TC007", "Step", "User Perform Registration Failed", status ? "PASS" : "FAIL");
             logStatus("TC007", "End", "Verify that insufficient balance error is thrown when the wallet balance is not enough", status ? "PASS" : "FAIL");
+            takeScreenshot(driver, "Fail", "TC007");
             return false;
         }
         lastGeneratedUsername = registration.lastGeneratedUsername;
@@ -404,6 +474,7 @@ public class App {
         if (!status) {
             logStatus("TC007", "Step", "User Perform Login Failed", status ? "PASS" : "FAIL");
             logStatus("TC007", "End", "Verify that insufficient balance error is thrown when the wallet balance is not enough", status ? "PASS" : "FAIL");
+            takeScreenshot(driver, "Fail", "TC007");
             return false;
         }
 
@@ -426,6 +497,8 @@ public class App {
         status = checkoutPage.verifyInsufficientBalanceMessage();
 
         logStatus("TC007", "End", "Verify that insufficient balance error is thrown when the wallet balance is not enough", status ? "PASS" : "FAIL");
+        takeScreenshot(driver, "End", "TC007");
+
         return status;
     }
 
