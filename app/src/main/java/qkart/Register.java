@@ -59,7 +59,7 @@ public class Register {
         // Click the register now button
         registerNowButton.click();
 
-        // Wait for registration to complete
+        // SLEEP_STMT_06: Wait for new user to get created in the backend
         Thread.sleep(3000);
 
         this.lastGeneratedUsername = testDataUsername;

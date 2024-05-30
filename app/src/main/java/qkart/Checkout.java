@@ -26,7 +26,6 @@ public class Checkout {
     public Boolean addNewAddress(String addressString) {
         Boolean status = false;
         try {
-            // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             // Click on the "Add new address" button, enter the addressString in the address text box and click on the
             // "ADD" button to save the address
             WebElement addAddress = driver.findElement(By.xpath("//button[contains(text(), 'Add new address')]"));
@@ -52,7 +51,6 @@ public class Checkout {
      */
     public Boolean selectAddress(String addressToSelect) {
         try {
-            // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             // Iterate through all the address boxes to find the address box with matching text, addressToSelect and
             // click on it
             List<WebElement> addresses = driver.findElements(By.xpath("//input[contains(@name, 'address')]/parent::span/following-sibling::p"));
@@ -76,7 +74,6 @@ public class Checkout {
     public Boolean placeOrder() {
         Boolean status = false;
         try {
-            // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             // Find the "PLACE ORDER" button and click on it
             WebElement placeOrderButton = driver.findElement(By.xpath("//button[contains(text(), 'PLACE ORDER')]"));
             placeOrderButton.click();
@@ -94,7 +91,6 @@ public class Checkout {
     public Boolean verifyInsufficientBalanceMessage() {
         Boolean status = false;
         try {
-            // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 07: MILESTONE 6
             WebElement message = driver.findElement(By.xpath("//div[contains(@class, 'SnackbarItem-message')]"));
             String expectedMessage = "You do not have enough balance in your wallet for this purchase";
             String actualMessage = message.getText();

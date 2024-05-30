@@ -9,6 +9,7 @@ import java.util.List;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 
 public class App {
@@ -23,6 +24,18 @@ public class App {
 
     public static void logStatus(String testCaseID, String testStep, String testMessage, String testStatus) {
         System.out.println(String.format("%s | %s | %s | %s | %s", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), testCaseID, testStep, testMessage, testStatus));
+    }
+
+    public static void takeScreenshot(WebDriver driver, String screenshotType, String description) {
+        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION - Implement method using below steps
+        /*
+         * 1. Check if the folder "/screenshots" exists, create if it doesn't
+         * 2. Generate a unique string using the timestamp
+         * 3. Capture screenshot
+         * 4. Save the screenshot inside the "/screenshots" folder using the following
+         * naming convention: screenshot_<Timestamp>_<ScreenshotType>_<Description>.png
+         * eg: screenshot_2022-03-05T06:59:46.015489_StartTestcase_Testcase01.png
+         */
     }
 
     /**
@@ -106,6 +119,7 @@ public class App {
         Home homePage = new Home(driver);
         homePage.navigateToHome();
 
+        // SLEEP_STMT_01: Wait for Page to Load
         Thread.sleep(5000);
 
         // Search for the "yonex" product
@@ -137,6 +151,8 @@ public class App {
         }
 
         logStatus("TC003", "Step", "Successfully validated the search results", "PASS");
+
+        // SLEEP_STMT_02: Wait for Page to Load
         Thread.sleep(2000);
 
         // Search for product
@@ -171,6 +187,7 @@ public class App {
         Home homePage = new Home(driver);
         homePage.navigateToHome();
 
+        // SLEEP_STMT_03: Wait for page to load
         Thread.sleep(5000);
 
         // Search for product and get card content element of search results
@@ -276,6 +293,8 @@ public class App {
 
         // Place the order
         checkoutPage.placeOrder();
+
+        // SLEEP_STMT_04: Wait for place order to succeed and navigate to Thanks page
         Thread.sleep(3000);
 
         // Check if placing order redirected to the Thanks page
@@ -303,8 +322,7 @@ public class App {
         Register registration = new Register(driver);
         Login login = new Login(driver);
 
-        // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 06: MILESTONE 5
-        // TODO: Register a new user
+        // Register a new user
         // Go to the Register page
         registration.navigateToRegisterPage();
 
@@ -317,7 +335,7 @@ public class App {
         // Save the username of the newly registered user
         lastGeneratedUsername = registration.lastGeneratedUsername;
 
-        // TODO: Login using the newly registed user
+        // Login using the newly registered user
         // Go to the login page
         login.navigateToLoginPage();
 
@@ -328,11 +346,11 @@ public class App {
             logStatus("TC006", "End", "Happy Flow Test Failed", status ? "PASS" : "FAIL");
         }
 
-        // TODO: Add "Xtend Smart Watch" to cart
+        // Add "Xtend Smart Watch" to cart
         status = homePage.searchForProduct("Xtend");
         homePage.addProductToCart("Xtend Smart Watch");
 
-        // TODO: Add "Yarine Floor Lamp" to cart
+        // Add "Yarine Floor Lamp" to cart
         status = homePage.searchForProduct("Yarine");
         homePage.addProductToCart("Yarine Floor Lamp");
 
@@ -413,6 +431,30 @@ public class App {
         return status;
     }
 
+    public static Boolean TestCase08(RemoteWebDriver driver) throws InterruptedException {
+        Boolean status = false;
+        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION
+        return status;
+    }
+
+    public static Boolean TestCase9(RemoteWebDriver driver) throws InterruptedException {
+        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION
+        Boolean status = false;
+        return status;
+    }
+
+    public static Boolean TestCase10(RemoteWebDriver driver) throws InterruptedException {
+        Boolean status = false;
+        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION
+        return status;
+    }
+
+    public static Boolean TestCase11(RemoteWebDriver driver) throws InterruptedException {
+        Boolean status = false;
+        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION
+        return status;
+    }
+
     public static void main(String[] args) throws InterruptedException {
         int totalTests = 0;
         int passedTests = 0;
@@ -440,7 +482,7 @@ public class App {
             totalTests += 1;
             status = TestCase03(driver);
             if (status) {
-            passedTests += 1;
+                passedTests += 1;
             }
             System.out.println("");
 
@@ -448,7 +490,7 @@ public class App {
             totalTests += 1;
             status = TestCase04(driver);
             if (status) {
-            passedTests += 1;
+                passedTests += 1;
             }
             System.out.println("");
 
@@ -456,7 +498,7 @@ public class App {
             totalTests += 1;
             status = TestCase05(driver);
             if (status) {
-            passedTests += 1;
+                passedTests += 1;
             }
             System.out.println("");
 
@@ -464,7 +506,7 @@ public class App {
             totalTests += 1;
             status = TestCase06(driver);
             if (status) {
-            passedTests += 1;
+                passedTests += 1;
             }
             System.out.println("");
 
@@ -472,9 +514,41 @@ public class App {
             totalTests += 1;
             status = TestCase07(driver);
             if (status) {
-            passedTests += 1;
+                passedTests += 1;
             }
             System.out.println("");
+
+            // Execute TC008
+            // totalTests += 1;
+            // status = TestCase08(driver);
+            // if (status) {
+            //     passedTests += 1;
+            // }
+            // System.out.println("");
+
+            // Execute TC009
+            // totalTests += 1;
+            // status = TestCase09(driver);
+            // if (status) {
+            //     passedTests += 1;
+            // }
+            // System.out.println("");
+
+            // Execute TC010
+            // totalTests += 1;
+            // status = TestCase10(driver);
+            // if (status) {
+            //     passedTests += 1;
+            // }
+            // System.out.println("");
+
+            // Execute TC011
+            // totalTests += 1;
+            // status = TestCase11(driver);
+            // if (status) {
+            //     passedTests += 1;
+            // }
+            // System.out.println("");
         } catch (Exception e) {
             throw e;
         } finally {

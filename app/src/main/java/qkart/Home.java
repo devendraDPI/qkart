@@ -27,7 +27,7 @@ public class Home {
             WebElement logoutButton = driver.findElement(By.className("MuiButton-text"));
             logoutButton.click();
 
-            // Wait for logout to complete
+            // SLEEP_STMT_10: Wait for Logout to complete
             Thread.sleep(3000);
             return true;
         } catch (Exception e) {
@@ -41,7 +41,6 @@ public class Home {
      */
     public Boolean searchForProduct(String product) {
         try {
-            // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 03: MILESTONE 1
             // Clear the contents of the search box and enter the product name in the search box
             WebElement searchBox = driver.findElement(By.xpath("(//input[contains(@name, 'search')])[1]"));
             searchBox.clear();
@@ -60,7 +59,6 @@ public class Home {
     public List<WebElement> getSearchResults() {
         List<WebElement> searchResults = new ArrayList<WebElement>() {};
         try {
-            // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 03: MILESTONE 1
             // Find all WebElements corresponding to the card content section of each of search results
             searchResults = driver.findElements(By.xpath("//div[contains(@class, 'card-actions')]/preceding-sibling::div"));
         } catch (Exception e) {
@@ -75,7 +73,6 @@ public class Home {
     public Boolean isNoResultFound() {
         Boolean status = false;
         try {
-            // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 03: MILESTONE 1
             // Check the presence of "No products found" text in the web page.
             // Assign status = true if the element is "displayed" else set status = false
             WebElement resultText = driver.findElement(By.xpath("//h4[contains(text(), 'No products found')]"));
@@ -89,7 +86,6 @@ public class Home {
      */
     public Boolean addProductToCart(String productName) {
         try {
-            // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             // Iterate through each product on the page to find the WebElement corresponding to the matching
             // productName Click on the "ADD TO CART" button for that element Return true if these operations succeeds
             List<WebElement> products = driver.findElements(By.xpath("//div[contains(@class, 'card-actions')]/preceding-sibling::div/p[1]"));
@@ -115,7 +111,6 @@ public class Home {
     public Boolean clickCheckout() {
         Boolean status = false;
         try {
-            // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             // Find and click on the the checkout button
             WebElement checkoutButton = driver.findElement(By.xpath("//button[contains(text(), 'Checkout')]"));
             checkoutButton.click();
@@ -132,7 +127,6 @@ public class Home {
      */
     public Boolean changeProductQuantityInCart(String productName, int quantity) {
         try {
-            // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 06: MILESTONE 5
             // Find the item on the cart with the matching productName Increment or decrement the quantity of the
             // matching product until the current quantity is reached (Note: Keep a look out when then input quantity
             // is 0, here we need to remove the item completely from the cart)

@@ -40,7 +40,7 @@ public class Login {
         // Click the login button
         loginButton.click();
 
-        // Wait for login action to complete
+        // SLEEP_STMT_13: Wait for Login to Complete
         Thread.sleep(5000);
 
         return this.verifyUserLoggedIn(username);
