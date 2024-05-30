@@ -10,6 +10,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 public class App {
@@ -18,7 +20,7 @@ public class App {
     public static WebDriver createDriver() {
         WebDriver driver = new ChromeDriver(); // Launch chrome browser
         driver.manage().window().maximize(); // Maximize browser window
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20)); // Implicitly wait
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5)); // Implicitly wait
         return driver;
     }
 
@@ -119,9 +121,6 @@ public class App {
         Home homePage = new Home(driver);
         homePage.navigateToHome();
 
-        // SLEEP_STMT_01: Wait for Page to Load
-        Thread.sleep(5000);
-
         // Search for the "yonex" product
         status = homePage.searchForProduct("yonex");
         if (!status) {
@@ -186,9 +185,6 @@ public class App {
         // Visit home page
         Home homePage = new Home(driver);
         homePage.navigateToHome();
-
-        // SLEEP_STMT_03: Wait for page to load
-        Thread.sleep(5000);
 
         // Search for product and get card content element of search results
         status = homePage.searchForProduct("Running Shoes");
@@ -294,15 +290,15 @@ public class App {
         // Place the order
         checkoutPage.placeOrder();
 
-        // SLEEP_STMT_04: Wait for place order to succeed and navigate to Thanks page
-        Thread.sleep(3000);
+        // Wait for place order to succeed and navigate to Thanks page
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        wait.until(ExpectedConditions.urlContains("/thanks"));
 
         // Check if placing order redirected to the Thanks page
         status = driver.getCurrentUrl().endsWith("/thanks");
 
         // Go to the home page
         homePage.navigateToHome();
-        Thread.sleep(3000);
 
         // Log out the user
         homePage.logoutUser();
@@ -370,12 +366,15 @@ public class App {
         checkoutPage.selectAddress("Addr line 1 addr Line 2 addr line 3");
 
         checkoutPage.placeOrder();
-        Thread.sleep(3000);
+
+        // Wait for place order to succeed and navigate to Thanks page
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        wait.until(ExpectedConditions.urlContains("/thanks"));
 
         status = driver.getCurrentUrl().endsWith("/thanks");
 
         homePage.navigateToHome();
-        Thread.sleep(3000);
+
         homePage.logoutUser();
 
         logStatus("TC006", "End", "Verify that cart can be edited", status ? "PASS" : "FAIL");
@@ -412,7 +411,6 @@ public class App {
         homePage.navigateToHome();
         status = homePage.searchForProduct("Stylecon");
         homePage.addProductToCart("Stylecon 9 Seater RHS Sofa Set");
-        Thread.sleep(3000);
 
         homePage.changeProductQuantityInCart("Stylecon 9 Seater RHS Sofa Set", 10);
 

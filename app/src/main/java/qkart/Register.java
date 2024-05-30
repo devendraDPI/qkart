@@ -1,10 +1,13 @@
 package qkart;
 
 import java.sql.Timestamp;
+import java.time.Duration;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Register {
     WebDriver driver;
@@ -59,8 +62,12 @@ public class Register {
         // Click the register now button
         registerNowButton.click();
 
-        // SLEEP_STMT_06: Wait for new user to get created in the backend
-        Thread.sleep(3000);
+        // Wait for new user to get created in the backend
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.or(
+            ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@id, 'notistack')]")),
+            ExpectedConditions.urlContains("/login")
+        ));
 
         this.lastGeneratedUsername = testDataUsername;
 

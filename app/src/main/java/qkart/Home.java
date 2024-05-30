@@ -1,11 +1,15 @@
 package qkart;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Home {
     WebDriver driver;
@@ -27,8 +31,11 @@ public class Home {
             WebElement logoutButton = driver.findElement(By.className("MuiButton-text"));
             logoutButton.click();
 
-            // SLEEP_STMT_10: Wait for Logout to complete
-            Thread.sleep(3000);
+            // Wait for Logout to complete
+            FluentWait<WebDriver> fWait = new FluentWait<WebDriver>(driver)
+                                    .withTimeout((Duration.ofSeconds(30)))
+                                    .pollingEvery(Duration.ofMillis(250));
+            fWait.until(ExpectedConditions.invisibilityOf(logoutButton));
             return true;
         } catch (Exception e) {
             // Error while logout
@@ -45,7 +52,11 @@ public class Home {
             WebElement searchBox = driver.findElement(By.xpath("(//input[contains(@name, 'search')])[1]"));
             searchBox.clear();
             searchBox.sendKeys(product);
-            Thread.sleep(5000);
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+            wait.until(ExpectedConditions.or(
+                ExpectedConditions.visibilityOfElementLocated(By.xpath("//h4[contains(text(), 'No products found')]")),
+                ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'card-actions')]/preceding-sibling::div"))
+            ));
             return true;
         } catch (Exception e) {
             System.out.println("Error while searching for a product: " + e.getMessage());
@@ -133,16 +144,21 @@ public class Home {
             WebElement product = driver.findElement(By.xpath("//div[contains(text(), '"+ productName +"')]/parent::div"));
             WebElement decrementQtyButton = product.findElement(By.xpath(".//button[1]"));
             WebElement incrementQtyButton = product.findElement(By.xpath(".//button[2]"));
-            int currentQty = Integer.parseInt(product.findElement(By.xpath(".//div[contains(@data-testid, 'item-qty')]")).getText());
+            WebElement currentQtyElement = product.findElement(By.xpath(".//div[contains(@data-testid, 'item-qty')]"));
+            int currentQty = Integer.parseInt(currentQtyElement.getText());
             int difference = Math.abs(currentQty - quantity);
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
 
             for (int i=0; i<difference; i++) {
                 if (currentQty < quantity) {
                     incrementQtyButton.click();
+                    wait.until(ExpectedConditions.textToBePresentInElement(currentQtyElement, String.valueOf(currentQty+1)));
+                    currentQty++;
                 } else {
                     decrementQtyButton.click();
+                    wait.until(ExpectedConditions.textToBePresentInElement(currentQtyElement, String.valueOf(currentQty-1)));
+                    currentQty--;
                 }
-                Thread.sleep(5000);
             }
 
             return true;

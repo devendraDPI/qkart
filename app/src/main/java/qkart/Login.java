@@ -1,8 +1,12 @@
 package qkart;
 
+import java.time.Duration;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 
 public class Login {
     WebDriver driver;
@@ -25,9 +29,6 @@ public class Login {
         // Enter the username
         usernameTextBox.sendKeys(username);
 
-        // Wait for user name to be entered
-        Thread.sleep(1000);
-
         // Find the password text box
         WebElement passwordTextBox = this.driver.findElement(By.id("password"));
 
@@ -40,8 +41,11 @@ public class Login {
         // Click the login button
         loginButton.click();
 
-        // SLEEP_STMT_13: Wait for Login to Complete
-        Thread.sleep(5000);
+        // Wait for Login to Complete
+        FluentWait<WebDriver> fWait = new FluentWait<WebDriver>(driver)
+                                    .withTimeout((Duration.ofSeconds(30)))
+                                    .pollingEvery(Duration.ofMillis(250));
+        fWait.until(ExpectedConditions.invisibilityOf(loginButton));
 
         return this.verifyUserLoggedIn(username);
     }
