@@ -20,8 +20,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import dev.failsafe.internal.util.Durations;
-
 
 public class App {
     public static String lastGeneratedUsername;
@@ -677,7 +675,7 @@ public class App {
      * Verify that the contact us dialog works fine
      */
     public static Boolean TestCase10(WebDriver driver) throws InterruptedException {
-        logStatus("TC010", "Start", "Verify that the contact us dialog works fine", "Done");
+        logStatus("TC010", "Start", "Verify that the contact us dialog works fine", "DONE");
         takeScreenshot(driver, "Start", "TC010");
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
@@ -715,10 +713,96 @@ public class App {
         return true;
     }
 
+    /**
+     * Verify that the Advertisement Links on the QKART page are clickable
+     */
     public static Boolean TestCase11(WebDriver driver) throws InterruptedException {
-        Boolean status = false;
-        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION
-        return status;
+        logStatus("TC011", "Start", "Verify that the Advertisement Links on the QKART page are clickable", "DONE");
+        takeScreenshot(driver, "Start", "TC011");
+
+        Boolean status;
+
+        // Go to the Register page
+        Register registration = new Register(driver);
+        registration.navigateToRegisterPage();
+
+        // Register a new user
+        status = registration.registerUser("testUser", "abc@123", true);
+        if (!status) {
+            logStatus("TC011", "End", "Verify that the Advertisement Links on the QKART page are clickable", "FAIL");
+            takeScreenshot(driver, "Fail", "TC011");
+        }
+
+        // Save the username of the newly registered user
+        lastGeneratedUsername = registration.lastGeneratedUsername;
+
+        // Go to the login page
+        Login login = new Login(driver);
+        login.navigateToLoginPage();
+
+        // Login with the newly registered user's credentials
+        status = login.loginUser(lastGeneratedUsername, "abc@123");
+        if (!status) {
+            logStatus("TC011", "Step", "User Perform Login Failed", status ? "PASS" : "Fail");
+            logStatus("TC011", "End", "Verify that the Advertisement Links on the QKART page are clickable", status ? "PASS" : "FAIL");
+            takeScreenshot(driver, "Fail", "TC011");
+        }
+
+        // Go to the home page
+        Home homePage = new Home(driver);
+        homePage.navigateToHome();
+
+        // Find required products by searching and add them to the user's cart
+        status = homePage.searchForProduct("Yonex");
+        homePage.addProductToCart("YONEX Smash Badminton Racquet");
+
+        // Click on the checkout button
+        homePage.clickCheckout();
+
+        // Add a new address on the Checkout page and select it
+        Checkout checkoutPage = new Checkout(driver);
+        checkoutPage.addNewAddress("Addr line 1 addr Line 2 addr line 3");
+        checkoutPage.selectAddress("Addr line 1 addr Line 2 addr line 3");
+
+        // Place the order
+        checkoutPage.placeOrder();
+
+        // Wait for place order to succeed and navigate to Thanks page
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        wait.until(ExpectedConditions.urlContains("/thanks"));
+
+        // Check if placing order redirected to the Thanks page
+        status = driver.getCurrentUrl().endsWith("/thanks");
+
+        List<WebElement> ads = driver.findElements(By.xpath("//iframe"));
+        int actualSize = ads.size();
+        int expectedSize = 3;
+        if (actualSize!=expectedSize) {
+            logStatus("TC011", "Step", "actualSize not equal to expectedSize", "FAIL");
+            logStatus("TC011", "End", "Verify that the Advertisement Links on the QKART page are clickable", "FAIL");
+            takeScreenshot(driver, "Fail", "TC011");
+            return false;
+        }
+
+        for (int i=1; i<expectedSize; i++) {
+            WebElement adv = driver.findElement(By.xpath("(//iframe)["+ i +"]"));
+            driver.switchTo().frame(adv);
+            WebElement buyNowButton = driver.findElement(By.xpath("//button[contains(text(), 'Buy Now')]"));
+            buyNowButton.click();
+            wait.until(ExpectedConditions.urlContains("/checkout"));
+            if (!driver.getCurrentUrl().contains("/checkout")) {
+                logStatus("TC011", "Step", "After clicking buy now button page is not redirected to checkout page", "FAIL");
+                logStatus("TC011", "End", "Verify that the Advertisement Links on the QKART page are clickable", "FAIL");
+                takeScreenshot(driver, "Fail", "TC011");
+                return false;
+            }
+            driver.navigate().back();
+            driver.switchTo().parentFrame();
+        }
+
+        logStatus("TC011", "End", "Verify that the Advertisement Links on the QKART page are clickable", "PASS");
+        takeScreenshot(driver, "End", "TC011");
+        return true;
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -809,12 +893,12 @@ public class App {
             System.out.println("");
 
             // Execute TC011
-            // totalTests += 1;
-            // status = TestCase11(driver);
-            // if (status) {
-            //     passedTests += 1;
-            // }
-            // System.out.println("");
+            totalTests += 1;
+            status = TestCase11(driver);
+            if (status) {
+                passedTests += 1;
+            }
+            System.out.println("");
         } catch (Exception e) {
             throw e;
         } finally {
