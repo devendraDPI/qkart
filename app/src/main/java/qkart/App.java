@@ -20,6 +20,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import dev.failsafe.internal.util.Durations;
+
 
 public class App {
     public static String lastGeneratedUsername;
@@ -671,10 +673,46 @@ public class App {
         return true;
     }
 
+    /**
+     * Verify that the contact us dialog works fine
+     */
     public static Boolean TestCase10(WebDriver driver) throws InterruptedException {
-        Boolean status = false;
-        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION
-        return status;
+        logStatus("TC010", "Start", "Verify that the contact us dialog works fine", "Done");
+        takeScreenshot(driver, "Start", "TC010");
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
+
+        // Go to the home page
+        Home homePage = new Home(driver);
+        homePage.navigateToHome();
+
+        // Click on the "Contact us" link
+        WebElement contactUs = driver.findElement(By.xpath("//p[contains(text(), 'Contact us')]"));
+        contactUs.click();
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'card-block')]")));
+
+        // Enter the name
+        WebElement name = driver.findElement(By.xpath("//input[contains(@placeholder, 'Name')]"));
+        name.sendKeys("crio user");
+
+        // Enter the email
+        WebElement email = driver.findElement(By.xpath("//input[contains(@placeholder, 'Email')]"));
+        email.sendKeys("criouser@gmail.com");
+
+        // Enter the message
+        WebElement message = driver.findElement(By.xpath("//input[contains(@placeholder, 'Message')]"));
+        message.sendKeys("Testing the contact us page");
+
+        // Click on the "Contact Now" button
+        WebElement contactNowBtn = driver.findElement(By.xpath("//button[contains(text(), 'Contact Now')]"));
+        contactNowBtn.click();
+
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'card-block')]")));
+
+        logStatus("TC010", "End", "Verify that the contact us dialog works fine", "Pass");
+        takeScreenshot(driver, "End", "TC010");
+        return true;
     }
 
     public static Boolean TestCase11(WebDriver driver) throws InterruptedException {
@@ -763,12 +801,12 @@ public class App {
             System.out.println("");
 
             // Execute TC010
-            // totalTests += 1;
-            // status = TestCase10(driver);
-            // if (status) {
-            //     passedTests += 1;
-            // }
-            // System.out.println("");
+            totalTests += 1;
+            status = TestCase10(driver);
+            if (status) {
+                passedTests += 1;
+            }
+            System.out.println("");
 
             // Execute TC011
             // totalTests += 1;
