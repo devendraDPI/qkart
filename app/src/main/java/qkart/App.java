@@ -6,14 +6,15 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.Set;
+import java.util.ArrayList;
 import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -502,25 +503,95 @@ public class App {
         return status;
     }
 
-    public static Boolean TestCase08(RemoteWebDriver driver) throws InterruptedException {
+    /**
+     * Verify that a product added to a cart is available when a new tab is added
+     */
+    public static Boolean TestCase08(WebDriver driver) throws InterruptedException {
+        logStatus("TC008", "Start", "Verify that a product added to a cart is available when a new tab is added", "DONE");
+        takeScreenshot(driver, "Start", "TC008");
+
+        Boolean status;
+
+        // Go to the Register page
+        Register registration = new Register(driver);
+        registration.navigateToRegisterPage();
+
+        // Register a new user
+        status = registration.registerUser("testUser", "abc@123", true);
+        if (!status) {
+            logStatus("TC008", "End", "Verify that a product added to a cart is available when a new tab is added", "FAIL");
+            takeScreenshot(driver, "Fail", "TC008");
+        }
+
+        // Save the username of the newly registered user
+        lastGeneratedUsername = registration.lastGeneratedUsername;
+
+        // Go to the login page
+        Login login = new Login(driver);
+        login.navigateToLoginPage();
+
+        // Login with the newly registered user's credentials
+        status = login.loginUser(lastGeneratedUsername, "abc@123");
+        if (!status) {
+            logStatus("TC008", "Step", "User Perform Login Failed", status ? "PASS" : "FAIL");
+            logStatus("TC008", "End", "Verify that a product added to a cart is available when a new tab is added", status ? "PASS" : "FAIL");
+            takeScreenshot(driver, "Fail", "TC008");
+        }
+
+        // Go to the home page
+        Home homePage = new Home(driver);
+        homePage.navigateToHome();
+
+        // Find required products by searching and add them to the user's cart
+        status = homePage.searchForProduct("Yonex");
+        homePage.addProductToCart("YONEX Smash Badminton Racquet");
+
+        // Open a new tab
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.open();");
+
+        Set<String> setWindows = driver.getWindowHandles();
+        String[] windows = setWindows.toArray(new String[setWindows.size()]);
+
+        // Switch to new tab
+        driver.switchTo().window(windows[1]);
+
+        // Navigate to the home page
+        homePage.navigateToHome();
+
+        // Check the contents of the cart
+        List<String> expectedProductsNameInCart = new ArrayList<>();
+        expectedProductsNameInCart.add("YONEX Smash Badminton Racquet");
+        status = homePage.verifyCartContents(expectedProductsNameInCart);
+
+        takeScreenshot(driver, "End", "TestCase08");
+        logStatus("TC008", "End", "Verify that a product added to a cart is available when a new tab is added", status ? "PASS" : "FAIL");
+
+        // Close new tab
+        driver.close();
+
+        // Switch to main tab
+        driver.switchTo().window(windows[0]);
+
+        // Logout
+        homePage.logoutUser();
+
+        return status;
+    }
+
+    public static Boolean TestCase9(WebDriver driver) throws InterruptedException {
+        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION
+        Boolean status = false;
+        return status;
+    }
+
+    public static Boolean TestCase10(WebDriver driver) throws InterruptedException {
         Boolean status = false;
         // TODO: CRIO_TASK_MODULE_SYNCHRONISATION
         return status;
     }
 
-    public static Boolean TestCase9(RemoteWebDriver driver) throws InterruptedException {
-        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION
-        Boolean status = false;
-        return status;
-    }
-
-    public static Boolean TestCase10(RemoteWebDriver driver) throws InterruptedException {
-        Boolean status = false;
-        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION
-        return status;
-    }
-
-    public static Boolean TestCase11(RemoteWebDriver driver) throws InterruptedException {
+    public static Boolean TestCase11(WebDriver driver) throws InterruptedException {
         Boolean status = false;
         // TODO: CRIO_TASK_MODULE_SYNCHRONISATION
         return status;
@@ -590,12 +661,12 @@ public class App {
             System.out.println("");
 
             // Execute TC008
-            // totalTests += 1;
-            // status = TestCase08(driver);
-            // if (status) {
-            //     passedTests += 1;
-            // }
-            // System.out.println("");
+            totalTests += 1;
+            status = TestCase08(driver);
+            if (status) {
+                passedTests += 1;
+            }
+            System.out.println("");
 
             // Execute TC009
             // totalTests += 1;
