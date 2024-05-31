@@ -4,11 +4,13 @@ import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.ArrayList;
+
 import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -564,7 +566,7 @@ public class App {
         expectedProductsNameInCart.add("YONEX Smash Badminton Racquet");
         status = homePage.verifyCartContents(expectedProductsNameInCart);
 
-        takeScreenshot(driver, "End", "TestCase08");
+        takeScreenshot(driver, "End", "TC008");
         logStatus("TC008", "End", "Verify that a product added to a cart is available when a new tab is added", status ? "PASS" : "FAIL");
 
         // Close new tab
@@ -579,10 +581,94 @@ public class App {
         return status;
     }
 
-    public static Boolean TestCase9(WebDriver driver) throws InterruptedException {
-        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION
-        Boolean status = false;
-        return status;
+    /**
+     * Verify that privacy policy and about us links are working fine
+     */
+    public static Boolean TestCase09(WebDriver driver) throws InterruptedException {
+        logStatus("TC009", "Start", "Verify that privacy policy and about us links are working fine", "DONE");
+        takeScreenshot(driver, "Start", "TC009");
+
+        // Go to the home page
+        Home homePage = new Home(driver);
+        homePage.navigateToHome();
+
+        // Go to privacy policy
+        WebElement privacyPolicy = driver.findElement(By.xpath("//a[contains(text(), 'Privacy policy')]"));
+        privacyPolicy.click();
+        Thread.sleep(2000); // No wait method to wait for tab to be open
+
+        // Verify that the url of the current tab does not change
+        String currentTabUrl = driver.getCurrentUrl();
+        if (!currentTabUrl.equals("https://crio-qkart-frontend-qa.vercel.app/")) {
+            logStatus("TC009", "Step", "Verify that the url of the current tab does not change", "Fail");
+            logStatus("TC009", "End", "Verify that privacy policy and about us links are working fine", "Fail");
+            takeScreenshot(driver, "Fail", "TC009");
+            return false;
+        }
+
+        Set<String> setWindows = driver.getWindowHandles();
+        String[] windows = setWindows.toArray(new String[setWindows.size()]);
+
+        // Switch to first tab
+        driver.switchTo().window(windows[1]);
+
+        // Verify if the privacy policy content is available on the newly opened tab
+        WebElement privacyPolicyHeading = driver.findElement(By.xpath("//h2[contains(text(), 'Privacy Policy')]"));
+        if (!privacyPolicyHeading.isDisplayed()) {
+            logStatus("TC009", "Step", "Verify if the privacy policy content is available on the newly opened tab", "Fail");
+            logStatus("TC009", "End", "Verify that privacy policy and about us links are working fine", "Fail");
+            takeScreenshot(driver, "Fail", "TC009");
+            return false;
+        }
+
+        // Switch to main tab
+        driver.switchTo().window(windows[0]);
+
+        // Go to terms of service
+        WebElement termsOfService = driver.findElement(By.xpath("//a[contains(text(), 'Terms of Service')]"));
+        termsOfService.click();
+        Thread.sleep(2000); // No wait method to wait for tab to be open
+
+        // Verify that the url of the current tab does not change
+        currentTabUrl = driver.getCurrentUrl();
+        if (!currentTabUrl.equals("https://crio-qkart-frontend-qa.vercel.app/")) {
+            logStatus("TC009", "Step", "Verify that the url of the current tab does not change", "Fail");
+            logStatus("TC009", "End", "Verify that privacy policy and about us links are working fine", "Fail");
+            takeScreenshot(driver, "Fail", "TC009");
+            return false;
+        }
+
+        setWindows = driver.getWindowHandles();
+        windows = setWindows.toArray(new String[setWindows.size()]);
+
+        // Switch to second tab
+        driver.switchTo().window(windows[2]);
+
+        // Verify if the terms of service content is available on the newly opened tab
+        WebElement termsOfServiceHeading = driver.findElement(By.xpath("//h2[contains(text(), 'Terms of Service')]"));
+        if (!termsOfServiceHeading.isDisplayed()) {
+            logStatus("TC009", "Step", "Terms of Service content is not available", "Fail");
+            logStatus("TC009", "End", "Verify that privacy policy and about us links are working fine", "Fail");
+            takeScreenshot(driver, "Fail", "TC009");
+            return false;
+        }
+
+        // Close second tab
+        driver.close();
+
+        // Switch to first tab
+        driver.switchTo().window(windows[1]);
+
+        // Close first tab
+        driver.close();
+
+        //Switch to main tab
+        driver.switchTo().window(windows[0]);
+
+        logStatus("TC009", "End", "Verify that privacy policy and about us links are working fine", "Pass");
+        takeScreenshot(driver, "End", "TC009");
+
+        return true;
     }
 
     public static Boolean TestCase10(WebDriver driver) throws InterruptedException {
@@ -669,12 +755,12 @@ public class App {
             System.out.println("");
 
             // Execute TC009
-            // totalTests += 1;
-            // status = TestCase09(driver);
-            // if (status) {
-            //     passedTests += 1;
-            // }
-            // System.out.println("");
+            totalTests += 1;
+            status = TestCase09(driver);
+            if (status) {
+                passedTests += 1;
+            }
+            System.out.println("");
 
             // Execute TC010
             // totalTests += 1;
