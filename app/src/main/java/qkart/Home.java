@@ -176,12 +176,12 @@ public class Home {
      */
     public Boolean verifyCartContents(List<String> expectedCartContents) {
         try {
-            WebElement cartParent = driver.findElement(By.className("cart"));
-            List<WebElement> cartContents = cartParent.findElements(By.className("css-zgtx0t"));
+            WebElement cartParent = driver.findElement(By.xpath("//div[contains(@class, 'cart MuiBox-root')]"));
+            List<WebElement> cartContents = cartParent.findElements(By.xpath(".//div[contains(@class, 'image')]/parent::div"));
 
             ArrayList<String> actualCartContents = new ArrayList<String>() {};
             for (WebElement cartItem : cartContents) {
-                actualCartContents.add(cartItem.findElement(By.className("css-1gjj37g")).getText().split("\n")[0]);
+                actualCartContents.add(cartItem.findElement(By.xpath("./div/following-sibling::div")).getText().split("\n")[0]);
             }
 
             for (String expected : expectedCartContents) {
