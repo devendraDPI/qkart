@@ -42,4 +42,23 @@ tasks.named('test') {
     useTestNG() {
         useDefaultListeners = true
     }
+
+    afterSuite {desc, result ->
+        if (!desc.parent) {
+            println "\nTest Result: ${result.resultType}"
+            println "Test Summary: Ran ${result.testCount} tests, " +
+                "${result.successfulTestCount} succeeded, " +
+                "${result.failedTestCount} failed, " +
+                "${result.skippedTestCount} skipped"
+        }
+    }
+
+    testLogging {
+        events "PASSED", "SKIPPED", "FAILED", "STANDARD_OUT", "STANDARD_ERROR"
+        exceptionFormat = 'full'
+        showStackTraces = true
+    }
+
+    testLogging.showStandardStreams = true
+    test.outputs.upToDateWhen {false}
 }
