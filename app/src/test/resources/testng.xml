@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Testing qkart e-commerce application">
+    <parameter name="TC01_Username" value="testUser"></parameter>
+    <parameter name="TC01_Password" value="abc@123"></parameter>
+    <test name="Test execution using TestNG">
+        <parameter name="TC05_ProductToSearch1" value="YONEX Smash Badminton Racquet"></parameter>
+        <parameter name="TC05_ProductToSearch2" value="Tan Leatherette Weekender Duffle"></parameter>
+        <parameter name="TC05_AddressDetails" value="Addr line 1 addr Line 2 addr line 3"></parameter>
+        <parameter name="TC06_ProductToSearch1" value="Xtend Smart Watch"></parameter>
+        <parameter name="TC06_ProductToSearch2" value="Yarine Floor Lamp"></parameter>
+        <parameter name="TC07_ProductToSearch" value="Stylecon 9 Seater RHS Sofa Set"></parameter>
+        <parameter name="TC07_Qty" value="10"></parameter>
+        <classes>
+            <class name="qkart.App"></class>
+        </classes>
+    </test>
+</suite>

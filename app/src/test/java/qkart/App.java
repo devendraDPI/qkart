@@ -12,6 +12,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
@@ -19,13 +21,14 @@ public class App extends Base {
     public static String lastGeneratedUsername;
 
     @Test
-    public void TestCase01() throws InterruptedException {
+    @Parameters({"TC01_Username", "TC01_Password"})
+    public void TestCase01(@Optional("testUser") String username, @Optional("abc@123") String password) throws InterruptedException {
         Boolean status;
 
         // Visit the registration page and register a new user
         Register registration = new Register(driver);
         registration.navigateToRegisterPage();
-        status = registration.registerUser("testUser", "abc@123", true);
+        status = registration.registerUser(username, password, true);
         Assert.assertTrue(status, "Unable to register");
 
         // Save the last generated username
@@ -34,7 +37,7 @@ public class App extends Base {
         // Visit the login page and login with the previously registered user
         Login login = new Login(driver);
         login.navigateToLoginPage();
-        status = login.loginUser(lastGeneratedUsername, "abc@123");
+        status = login.loginUser(lastGeneratedUsername, password);
         Assert.assertTrue(status, "Unable to login");
 
         // Visit the home page and log out the logged in user
@@ -159,7 +162,8 @@ public class App extends Base {
     }
 
     @Test
-    public void TestCase05() throws InterruptedException {
+    @Parameters({"TC05_ProductToSearch1", "TC05_ProductToSearch2", "TC05_AddressDetails"})
+    public void TestCase05(String product1, String product2, String address) throws InterruptedException {
         Boolean status;
         SoftAssert sa = new SoftAssert();
 
@@ -187,17 +191,17 @@ public class App extends Base {
         homePage.navigateToHome();
 
         // Find required products by searching and add them to the user's cart
-        status = homePage.searchForProduct("Yonex");
-        sa.assertTrue(status, String.format("Unable to search for '%s' product", "Yonex"));
+        status = homePage.searchForProduct(product1);
+        sa.assertTrue(status, String.format("Unable to search for '%s' product", product1));
 
-        status = homePage.addProductToCart("YONEX Smash Badminton Racquet");
-        sa.assertTrue(status, String.format("Unable to add '%s' product to cart", "YONEX Smash Badminton Racquet"));
+        status = homePage.addProductToCart(product1);
+        sa.assertTrue(status, String.format("Unable to add '%s' product to cart", product1));
 
-        status = homePage.searchForProduct("Tan");
-        sa.assertTrue(status, String.format("Unable to search for '%s' product", "Tan"));
+        status = homePage.searchForProduct(product2);
+        sa.assertTrue(status, String.format("Unable to search for '%s' product", product2));
 
-        status = homePage.addProductToCart("Tan Leatherette Weekender Duffle");
-        sa.assertTrue(status, String.format("Unable to add '%s' product to cart", "Tan Leatherette Weekender Duffle"));
+        status = homePage.addProductToCart(product2);
+        sa.assertTrue(status, String.format("Unable to add '%s' product to cart", product2));
 
         // Click on the checkout button
         status = homePage.clickCheckout();
@@ -206,10 +210,10 @@ public class App extends Base {
         // Add a new address on the Checkout page and select it
         Checkout checkoutPage = new Checkout(driver);
 
-        status = checkoutPage.addNewAddress("Addr line 1 addr Line 2 addr line 3");
+        status = checkoutPage.addNewAddress(address);
         Assert.assertTrue(status, "Unable to add new address");
 
-        status = checkoutPage.selectAddress("Addr line 1 addr Line 2 addr line 3");
+        status = checkoutPage.selectAddress(address);
         Assert.assertTrue(status, "Unable to select address");
 
         // Place the order
@@ -235,7 +239,8 @@ public class App extends Base {
     }
 
     @Test
-    public void TestCase06() throws InterruptedException {
+    @Parameters({"TC06_ProductToSearch1", "TC06_ProductToSearch2"})
+    public void TestCase06(String product1, String product2) throws InterruptedException {
         Boolean status;
         SoftAssert sa = new SoftAssert();
 
@@ -263,30 +268,30 @@ public class App extends Base {
         Assert.assertTrue(status, "Unable to login");
 
         // Add "Xtend Smart Watch" to cart
-        status = homePage.searchForProduct("Xtend");
-        sa.assertTrue(status, String.format("Unable to search for '%s' product", "Xtend"));
+        status = homePage.searchForProduct(product1);
+        sa.assertTrue(status, String.format("Unable to search for '%s' product", product1));
 
-        status = homePage.addProductToCart("Xtend Smart Watch");
-        sa.assertTrue(status, String.format("Unable to add '%s' product to cart", "Xtend Smart Watch"));
+        status = homePage.addProductToCart(product1);
+        sa.assertTrue(status, String.format("Unable to add '%s' product to cart", product1));
 
         // Add "Yarine Floor Lamp" to cart
-        status = homePage.searchForProduct("Yarine");
-        sa.assertTrue(status, String.format("Unable to search for '%s' product", "Yarine"));
+        status = homePage.searchForProduct(product2);
+        sa.assertTrue(status, String.format("Unable to search for '%s' product", product2));
 
-        status = homePage.addProductToCart("Yarine Floor Lamp");
-        sa.assertTrue(status, String.format("Unable to add '%s' product to cart", "Yarine Floor Lamp"));
+        status = homePage.addProductToCart(product2);
+        sa.assertTrue(status, String.format("Unable to add '%s' product to cart", product2));
 
         // update watch quantity to 2
-        status = homePage.changeProductQuantityInCart("Xtend Smart Watch", 2);
-        sa.assertTrue(status, String.format("Unable to change '%s' quantity to '%d'", "Xtend Smart Watch", 2));
+        status = homePage.changeProductQuantityInCart(product1, 2);
+        sa.assertTrue(status, String.format("Unable to change '%s' quantity to '%d'", product1, 2));
 
         // update table lamp quantity to 0
-        status = homePage.changeProductQuantityInCart("Yarine Floor Lamp", 0);
-        sa.assertTrue(status, String.format("Unable to change '%s' quantity to '%d'", "Yarine Floor Lamp", 0));
+        status = homePage.changeProductQuantityInCart(product2, 0);
+        sa.assertTrue(status, String.format("Unable to change '%s' quantity to '%d'", product2, 0));
 
         // update watch quantity again to 1
-        status = homePage.changeProductQuantityInCart("Xtend Smart Watch", 1);
-        sa.assertTrue(status, String.format("Unable to change '%s' quantity to '%d'", "Xtend Smart Watch", 1));
+        status = homePage.changeProductQuantityInCart(product1, 1);
+        sa.assertTrue(status, String.format("Unable to change '%s' quantity to '%d'", product1, 1));
 
         status = homePage.clickCheckout();
         Assert.assertTrue(status, "Unable to click on checkout");
@@ -318,7 +323,8 @@ public class App extends Base {
     }
 
     @Test
-    public void TestCase07() throws InterruptedException {
+    @Parameters({"TC07_ProductToSearch", "TC07_Qty"})
+    public void TestCase07(String product, Integer qty) throws InterruptedException {
         Boolean status;
         SoftAssert sa = new SoftAssert();
 
@@ -337,13 +343,13 @@ public class App extends Base {
         Home homePage = new Home(driver);
         homePage.navigateToHome();
 
-        status = homePage.searchForProduct("Stylecon");
-        sa.assertTrue(status, String.format("Unable to search for '%s' product", "Stylecon"));
+        status = homePage.searchForProduct(product);
+        sa.assertTrue(status, String.format("Unable to search for '%s' product", product));
 
-        status = homePage.addProductToCart("Stylecon 9 Seater RHS Sofa Set");
-        sa.assertTrue(status, String.format("Unable to add '%s' product to cart", "Stylecon 9 Seater RHS Sofa Set"));
+        status = homePage.addProductToCart(product);
+        sa.assertTrue(status, String.format("Unable to add '%s' product to cart", product));
 
-        status = homePage.changeProductQuantityInCart("Stylecon 9 Seater RHS Sofa Set", 10);
+        status = homePage.changeProductQuantityInCart(product, qty);
         sa.assertTrue(status, String.format("Unable to change quantity"));
 
         status = homePage.clickCheckout();

@@ -40,6 +40,9 @@ application {
 tasks.named('test') {
     // Use TestNG for unit tests.
     useTestNG() {
+        suites (
+            "src/test/resources/testng.xml"
+        )
         useDefaultListeners = true
     }
 
