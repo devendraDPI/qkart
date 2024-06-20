@@ -20,7 +20,10 @@ import org.testng.asserts.SoftAssert;
 public class App extends Base {
     public static String lastGeneratedUsername;
 
-    @Test
+    @Test(
+        description = "Verify that a new user can register and login to qkart",
+        priority = 1
+    )
     @Parameters({"TC01_Username", "TC01_Password"})
     public void TestCase01(@Optional("testUser") String username, @Optional("abc@123") String password) throws InterruptedException {
         Boolean status;
@@ -46,7 +49,10 @@ public class App extends Base {
         Assert.assertTrue(status, "Unable to logout");
     }
 
-    @Test
+    @Test(
+        description = "Verify that an existing user is not allowed to re-register on qkart",
+        priority = 2
+    )
     public void TestCase02() throws InterruptedException {
         Boolean status;
 
@@ -66,7 +72,10 @@ public class App extends Base {
         Assert.assertFalse(status, "Able to re-register");
     }
 
-    @Test
+    @Test(
+        description = "Verify the functionality of search text box",
+        priority = 3
+    )
     public void TestCase03() throws InterruptedException {
         boolean status;
         SoftAssert sa = new SoftAssert();
@@ -109,7 +118,10 @@ public class App extends Base {
         sa.assertAll();
     }
 
-    @Test
+    @Test(
+        description = "Verify the existence of size chart for certain items and validate contents of size chart",
+        priority = 4
+    )
     public void TestCase04() throws InterruptedException {
         boolean status = false;
         SoftAssert sa = new SoftAssert();
@@ -161,7 +173,10 @@ public class App extends Base {
         sa.assertAll();
     }
 
-    @Test
+    @Test(
+        description = "Verify that a new user can add multiple products in to the cart and checkout",
+        priority = 5
+    )
     @Parameters({"TC05_ProductToSearch1", "TC05_ProductToSearch2", "TC05_AddressDetails"})
     public void TestCase05(String product1, String product2, String address) throws InterruptedException {
         Boolean status;
@@ -238,7 +253,10 @@ public class App extends Base {
         sa.assertAll();
     }
 
-    @Test
+    @Test(
+        description = "Verify that the contents of the cart can be edited",
+        priority = 6
+    )
     @Parameters({"TC06_ProductToSearch1", "TC06_ProductToSearch2"})
     public void TestCase06(String product1, String product2) throws InterruptedException {
         Boolean status;
@@ -322,7 +340,10 @@ public class App extends Base {
         sa.assertAll();
     }
 
-    @Test
+    @Test(
+        description = "Verify that insufficient balance error is thrown when the wallet balance is not enough",
+        priority = 7
+    )
     @Parameters({"TC07_ProductToSearch", "TC07_Qty"})
     public void TestCase07(String product, Integer qty) throws InterruptedException {
         Boolean status;
@@ -372,7 +393,10 @@ public class App extends Base {
         sa.assertAll();
     }
 
-    @Test
+    @Test(
+        description = "Verify that a product added to a cart is available when a new tab is added",
+        priority = 8
+    )
     public void TestCase08() throws InterruptedException {
         Boolean status;
         SoftAssert sa = new SoftAssert();
@@ -440,7 +464,10 @@ public class App extends Base {
         sa.assertAll();
     }
 
-    @Test
+    @Test(
+        description = "Verify that privacy policy and about us links are working fine",
+        priority = 9
+    )
     public void TestCase09() throws InterruptedException {
         boolean status = false;
         SoftAssert sa = new SoftAssert();
@@ -509,7 +536,10 @@ public class App extends Base {
         sa.assertAll();
     }
 
-    @Test
+    @Test(
+        description = "Verify that the contact us dialog works fine",
+        priority = 10
+    )
     public void TestCase10() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(2));
 
@@ -544,7 +574,10 @@ public class App extends Base {
         Assert.assertTrue(true, "Contact us option is not working correctly");
     }
 
-    @Test
+    @Test(
+        description = "Verify that the advertisement Links on the qkart page are clickable",
+        priority = 11
+    )
     public void TestCase11() throws InterruptedException {
         Boolean status;
         SoftAssert sa = new SoftAssert();
