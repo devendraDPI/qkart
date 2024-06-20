@@ -22,7 +22,8 @@ public class App extends Base {
 
     @Test(
         description = "Verify that a new user can register and login to qkart",
-        priority = 1
+        priority = 1,
+        groups = {"sanity"}
     )
     @Parameters({"TC01_Username", "TC01_Password"})
     public void TestCase01(@Optional("testUser") String username, @Optional("abc@123") String password) throws InterruptedException {
@@ -51,7 +52,8 @@ public class App extends Base {
 
     @Test(
         description = "Verify that an existing user is not allowed to re-register on qkart",
-        priority = 2
+        priority = 2,
+        groups = {"sanity"}
     )
     public void TestCase02() throws InterruptedException {
         Boolean status;
@@ -74,7 +76,8 @@ public class App extends Base {
 
     @Test(
         description = "Verify the functionality of search text box",
-        priority = 3
+        priority = 3,
+        groups = {"sanity"}
     )
     public void TestCase03() throws InterruptedException {
         boolean status;
@@ -120,7 +123,8 @@ public class App extends Base {
 
     @Test(
         description = "Verify the existence of size chart for certain items and validate contents of size chart",
-        priority = 4
+        priority = 4,
+        groups = {"regression"}
     )
     public void TestCase04() throws InterruptedException {
         boolean status = false;
@@ -175,7 +179,8 @@ public class App extends Base {
 
     @Test(
         description = "Verify that a new user can add multiple products in to the cart and checkout",
-        priority = 5
+        priority = 5,
+        groups = {"sanity"}
     )
     @Parameters({"TC05_ProductToSearch1", "TC05_ProductToSearch2", "TC05_AddressDetails"})
     public void TestCase05(String product1, String product2, String address) throws InterruptedException {
@@ -255,7 +260,8 @@ public class App extends Base {
 
     @Test(
         description = "Verify that the contents of the cart can be edited",
-        priority = 6
+        priority = 6,
+        groups = {"regression"}
     )
     @Parameters({"TC06_ProductToSearch1", "TC06_ProductToSearch2"})
     public void TestCase06(String product1, String product2) throws InterruptedException {
@@ -342,7 +348,8 @@ public class App extends Base {
 
     @Test(
         description = "Verify that insufficient balance error is thrown when the wallet balance is not enough",
-        priority = 7
+        priority = 7,
+        groups = {"sanity"}
     )
     @Parameters({"TC07_ProductToSearch", "TC07_Qty"})
     public void TestCase07(String product, Integer qty) throws InterruptedException {
@@ -395,7 +402,8 @@ public class App extends Base {
 
     @Test(
         description = "Verify that a product added to a cart is available when a new tab is added",
-        priority = 8
+        priority = 8,
+        groups = {"regression"}
     )
     public void TestCase08() throws InterruptedException {
         Boolean status;
@@ -466,7 +474,8 @@ public class App extends Base {
 
     @Test(
         description = "Verify that privacy policy and about us links are working fine",
-        priority = 9
+        priority = 9,
+        groups = {"regression"}
     )
     public void TestCase09() throws InterruptedException {
         boolean status = false;
@@ -576,7 +585,8 @@ public class App extends Base {
 
     @Test(
         description = "Verify that the advertisement Links on the qkart page are clickable",
-        priority = 11
+        priority = 11,
+        groups = {"sanity", "regression"}
     )
     public void TestCase11() throws InterruptedException {
         Boolean status;
