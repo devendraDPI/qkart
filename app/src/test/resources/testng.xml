@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="Testing qkart e-commerce application">
+    <listeners>
+        <listener class-name = "qkart.listeners.TestListener"></listener>
+    </listeners>
     <parameter name="TC01_Username" value="testUser"></parameter>
     <parameter name="TC01_Password" value="abc@123"></parameter>
     <test name="Test execution using TestNG">
